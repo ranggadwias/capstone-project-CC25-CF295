@@ -43,9 +43,32 @@ http://localhost:4000
   > ```
   > {
   >   "message": "Login berhasil",
+  >   "token": "<JWT Token>",
   >   "user": {
   >     "id": "Jq3C0M0rkh3SbRRiwnJ7",
   >     "name": "Saber Alucard",
+  >   }
+  > }
+  > ```
+
+<br>
+
+# Get Dashboard Summary
+
+- URL : ```/api/transactions/summary```
+- Method : ```GET```
+- Headers :
+
+  - ```Authorization: Bearer <JWT Token dari login>```
+
+- Response :
+  > ```
+  > {
+  >   "message": "Data dashboard berhasil diambil",
+  >   "data": {
+  >     "availableBalance": 2000000,
+  >     "totalIncome": 5000000,
+  >     "totalExpense": -3000000
   >   }
   > }
   > ```
@@ -58,13 +81,12 @@ http://localhost:4000
 - Method : ```POST```
 - Headers :
 
-  - ```x-user-id: "Jq3C0M0rkh3SbRRiwnJ7"```
-  - ```x-user-name: "Saber Alucard"```
+  - ```Authorization: Bearer <JWT Token dari login>```
 
 - Request Body :
 
   - ```amount```
-  - ```type```, hanya bisa "income" atau "expense"
+  - ```type```, income | expense
   - ```description```
   - ```date```
 
@@ -74,6 +96,31 @@ http://localhost:4000
   >   "message": "Transaksi berhasil ditambahkan",
   >   "transactionId": "hmbG9L00M8v31HHQq9aG"
   > }
+  > ```
+
+<br>
+
+# Get All Transaction
+
+- URL : ```/api/transactions```
+- Method : ```GET```
+- Headers :
+
+  - ```Authorization: Bearer <JWT Token dari login>```
+
+- Response :
+  > ```
+  > "message": "Data transaksi berhasil diambil",
+  > "transactions": [
+  >     {
+  >         "transactionId": "hmbG9L00M8v31HHQq9aG",
+  >         "userId": "Jq3C0M0rkh3SbRRiwnJ7",
+  >         "type": "income | expense",
+  >         "description": "Lorem Ipsum",
+  >         "amount": 2000000,
+  >         "date": "2025-05-31 (YYYY-MM-DD)"
+  >     }
+  > ]
   > ```
 
 <br>

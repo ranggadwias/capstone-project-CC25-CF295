@@ -1,15 +1,22 @@
-export const auth = (req, res, next) => {
-  const userId = req.header("x-user-id");
-  const userName = req.header("x-user-name");
+import jwt from 'jsonwebtoken';
 
-  if (!userId || !userName) {
-    return res.status(401).json({ message: "User belum login" });
+export const auth = (req, res, next) => {
+  const authHeader = req.header("Authorization");
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Token tidak ditemukan, silakan login" });
   }
 
-  req.userId = userId;
-  req.userName = userName;
+  const token = authHeader.split(" ")[1];
 
-  next();
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.id;
+    req.userName = decoded.name;
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Token tidak valid atau sudah kadaluarsa" });
+  }
 };
 
 export const validateRegister = (req, res, next) => {

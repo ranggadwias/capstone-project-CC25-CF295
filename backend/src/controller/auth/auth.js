@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
 import { createUser, findUserByEmail } from "../../models/auth/User.js"; 
 
 export const userRegister = async (req, res) => {
@@ -36,8 +37,15 @@ export const userLogin = async (req, res) => {
       return res.status(401).json({ message: "Email atau password tidak valid" });
     }
 
+    const token = jwt.sign(
+      { id: user.id, name: user.name },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
     res.status(200).json({
       message: "Login berhasil",
+      token,
       user: {
         id: user.id,
         name: user.name,
