@@ -1,23 +1,41 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
-  Drawer, Box, Typography, Grid, Card, CardContent, Table, TableBody, TableCell, TableHead, TableRow, List, ListItem, ListItemIcon, ListItemText, Button
+  Drawer, Box, Typography, Grid, Card, List, ListItem, ListItemIcon, ListItemText,
+  Button, Avatar, TextField, Modal
 } from '@mui/material';
 import {
-  Dashboard as Storage, Category, AccountCircle, ListAlt, Info
+  Dashboard as DashboardIcon,
+  ListAlt,
+  Info,
+  AccountCircle
 } from '@mui/icons-material';
 import logo from './image/logo.png';
 import { googleLogout } from '@react-oauth/google';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import { ListItemButton } from '@mui/material';
 
-
-function DashboardUser() {
+function Account() {
   const navigate = useNavigate();
-  const [openDataItems, setOpenDataItems] = useState(false);
 
-  const handleDataItemsClick = () => {
-    setOpenDataItems((prev) => !prev);
+  const [profileImage, setProfileImage] = useState(null);
+  const [userData, setUserData] = useState({
+    name: 'John Doe',
+    address: 'Jl. Contoh No. 123',
+    email: 'johndoe@email.com',
+    phone: '081277459336'
+  });
+
+  const [tempProfile, setTempProfile] = useState({ ...userData });
+
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openSuccesModal, setOpenSuccesModal] = useState(false);
+  const [openCancelModal, setOpenCancelModal] = useState(false);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(URL.createObjectURL(file));
+    }
   };
 
   const handleLogout = () => {
@@ -26,12 +44,21 @@ function DashboardUser() {
     navigate('/');
   };
 
-  const recentItems = [
-    { id: 1, name: 'Redmi Note 9', type: 'Headphone', creationDate: '2024-10-23' },
-    { id: 2, name: 'Samsung Galaxy S21', type: 'Smartphone', creationDate: '2024-10-24' },
-    { id: 3, name: 'Apple iPhone 12', type: 'Smartphone', creationDate: '2024-10-25' },
-    { id: 4, name: 'Sony WH-1000XM4', type: 'Headphone', creationDate: '2024-10-26' },
-  ];
+  const handleCloseEditModal = () => {
+    setOpenEditModal(false);
+    setOpenCancelModal(true); // Tampilkan modal cancel saat edit dibatalkan
+  };
+
+  const handleOpenEditModal = () => {
+    setTempProfile({ ...userData });
+    setOpenEditModal(true);
+  };
+
+  const handleUpdateProfile = () => {
+    setUserData(tempProfile);
+    setOpenEditModal(false);
+    setOpenSuccesModal(true); // Tampilkan modal sukses
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -85,7 +112,6 @@ function DashboardUser() {
           </List>
         </Box>
 
-
         <Box sx={{ p: 2 }}>
           <Button
             variant="contained"
@@ -102,93 +128,146 @@ function DashboardUser() {
             Log Out
           </Button>
         </Box>
-
       </Drawer>
 
-      {/* Main content */}
       <Box sx={{ flexGrow: 1, ml: '30px', position: 'relative', top: '-40px' }}>
         <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bold' }}>
-          Dashboard
+          Account
         </Typography>
 
-        <Grid item xs={12}>
-          <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 2 }}>Welcome, Budi</Typography>
+        <Card sx={{ textAlign: 'center', p: 2 }} />
 
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={6}>
-            </Grid>
+        <Grid container spacing={4} sx={{ mt: 2 }}>
+          <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
+            <Avatar
+              sx={{
+                width: 180,
+                height: 180,
+                mx: 'auto',
+                bgcolor: 'grey.400',
+                mb: 2,
+              }}
+              src={profileImage || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+            />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: 'none' }}
+              id="upload-avatar"
+            />
+            <label htmlFor="upload-avatar">
+              <Button variant="outlined" component="span" sx={{ mt: 2 }}>
+                Upload Photo
+              </Button>
+            </label>
           </Grid>
-        </Grid>
 
-        
+          <Grid item xs={12} md={8}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField fullWidth label="Nama Lengkap" value={userData.name} InputProps={{ readOnly: true }} />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField fullWidth label="No. Handphone" value={userData.phone} InputProps={{ readOnly: true }} />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField fullWidth label="Alamat" value={userData.address} InputProps={{ readOnly: true }} />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField fullWidth label="Email" value={userData.email} InputProps={{ readOnly: true }} />
+              </Grid>
+            </Grid>
 
-        <Card sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, mb: 5 }}>
-  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-    <Storage sx={{ fontSize: 30, marginRight: 2 }} />
-    <CardContent sx={{ p: 0 }}>
-      <Typography variant="subtitle1">Available Balance</Typography>
-      <Typography variant="h4" sx={{ fontWeight: 'bold' }}>Rp 15.200.000</Typography>
-    </CardContent>
-  </Box>
-
-  <Box sx={{ display: 'flex', gap: 2 }}>
-    <Button variant="contained" sx={{ backgroundColor: '#BBD9EE', color: '#000' }}>
-      Add Transaction
-    </Button>
-    <Button variant="contained" sx={{ backgroundColor: '#E3E3E3', color: '#000' }}>
-      View Report
-    </Button>
-  </Box>
-</Card>
-
-
-        <Grid item xs={4}>
-          <Card sx={{ textAlign: 'center', p: 2 }}>
-            <Typography variant="subtitle1" gutterBottom>This Month</Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Box
+            <Box sx={{ mt: 4, textAlign: 'right' }}>
+              <Button
+                variant="contained"
+                onClick={handleOpenEditModal}
                 sx={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: '50%',
-                  background: 'conic-gradient(#BBD9EE 0% 80%, #ccc 80% 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  bgcolor: '#E3EAF6',
+                  color: '#000',
+                  borderRadius: 2,
                   fontWeight: 'bold',
+                  px: 4,
                 }}
               >
-                80%
+                EDIT
+              </Button>
+            </Box>
+          </Grid>
+
+          {/* Modal Edit Profile */}
+          <Modal open={openEditModal} onClose={handleCloseEditModal}>
+            <Box sx={{
+              position: 'absolute', top: '50%', left: '50%',
+              transform: 'translate(-50%, -50%)', width: 500,
+              bgcolor: 'background.paper', p: 4, borderRadius: 5
+            }}>
+              <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+                Edit Profile
+              </Typography>
+
+              {[
+                { key: 'name', label: 'Nama Lengkap' },
+                { key: 'phone', label: 'No. Handphone' },
+                { key: 'address', label: 'Alamat' },
+                { key: 'email', label: 'Email' }
+              ].map((field, index) => (
+                <Box key={index} sx={{ display: 'flex', mb: 3, alignItems: 'center' }}>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', minWidth: '150px' }}>
+                    {field.label}
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold', mr: 1 }}>:</Typography>
+                  <TextField
+                    variant="outlined"
+                    value={tempProfile[field.key]}
+                    onChange={(e) =>
+                      setTempProfile({ ...tempProfile, [field.key]: e.target.value })
+                    }
+                    fullWidth
+                  />
+                </Box>
+              ))}
+
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                <Button variant="contained" color="primary" onClick={handleUpdateProfile}>
+                  Update
+                </Button>
+                <Button variant="outlined" onClick={handleCloseEditModal} sx={{ ml: 2 }}>
+                  Cancel
+                </Button>
               </Box>
             </Box>
-            <Typography variant="caption">of Rp 15.200.000</Typography>
-            <Typography variant="caption" color="error" display="block">Warning if limits exceeded</Typography>
-          </Card>
-        </Grid>
+          </Modal>
 
-        <Grid item xs={4}>
-          <Card sx={{ backgroundColor: '#E0F0FC', p: 2 }}>
-            <Typography variant="subtitle2" gutterBottom>Total Income</Typography>
-            <Typography variant="h6">Rp 10.000.000</Typography>
-            <Box sx={{ mt: 1, height: 10, backgroundColor: '#c0e0f9', borderRadius: 5 }}>
-              <Box sx={{ width: '66%', height: '100%', backgroundColor: '#5BA2D3', borderRadius: 5 }} />
+          {/* Modal Update Berhasil */}
+          <Modal open={openSuccesModal} onClose={() => setOpenSuccesModal(false)}>
+            <Box sx={{
+              position: 'absolute', top: '50%', left: '50%',
+              transform: 'translate(-50%, -50%)', width: 300,
+              bgcolor: 'background.paper', p: 3, borderRadius: 2, textAlign: 'center'
+            }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>Update Berhasil!</Typography>
+              <Button variant="contained" onClick={() => setOpenSuccesModal(false)}>OK</Button>
             </Box>
-          </Card>
-        </Grid>
+          </Modal>
 
-        <Grid item xs={4}>
-          <Card sx={{ border: '1px solid red', p: 2 }}>
-            <Typography variant="subtitle2" gutterBottom>Total Expenditure</Typography>
-            <Typography variant="h6" color="error">Rp 5.200.000</Typography>
-            <Box sx={{ mt: 1, height: 10, backgroundColor: '#f5bdbd', borderRadius: 5 }}>
-              <Box sx={{ width: '34%', height: '100%', backgroundColor: 'red', borderRadius: 5 }} />
+          {/* Modal Cancel */}
+          <Modal open={openCancelModal} onClose={() => setOpenCancelModal(false)}>
+            <Box sx={{
+              position: 'absolute', top: '50%', left: '50%',
+              transform: 'translate(-50%, -50%)', width: 300,
+              bgcolor: 'background.paper', p: 3, borderRadius: 2, textAlign: 'center'
+            }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>Perubahan Dibatalkan</Typography>
+              <Button variant="contained" onClick={() => setOpenCancelModal(false)}>OK</Button>
             </Box>
-          </Card>
-        </Grid>
+          </Modal>
 
+        </Grid>
       </Box>
     </Box>
   );
 }
 
-export default DashboardUser;
+export default Account;
