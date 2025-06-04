@@ -1,26 +1,23 @@
 import React, { useState } from 'react';
 import {
-  CssBaseline, Box, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Collapse
+  CssBaseline, Box, Toolbar, Drawer, List, ListItem, ListItemIcon, ListItemText, Collapse
 } from '@mui/material';
 import {
-  Menu as  ExpandLess, ExpandMore, Search, Description, Info, AccountCircle, ListAlt, Storage
+  ExpandLess, ExpandMore, Search, Description, Info, AccountCircle, ListAlt, Storage
 } from '@mui/icons-material';
 import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
-import logo from './image/logo.png';  
-import Loginform from './loginform';
-import Register from './register';
-import DashboardUser from './dashboarduser';
-import Transaction from './transaction';
-import Report from './report';
-
-
-import Account from './account';
+import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
+import DashboardUser from './pages/Dashboard/DashboardUser';
+import Transaction from './pages/Transaction/Transaction';
+import Report from './pages/Report/Report';
+import Account from './pages/Account/Account';
 
 
 function App() {
   const [open,] = useState(false);
   const [openDataItems, setOpenDataItems] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);  // Status login
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
 
   const handleDataItemsClick = () => {
     setOpenDataItems(!openDataItems);
@@ -30,23 +27,6 @@ function App() {
     <Router>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        {/* AppBar Utama */}
-        {isLoggedIn && (
-          <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: 'black' }}>
-            <Toolbar sx={{ justifyContent: 'space-between' }}>
-              <Box display="flex" alignItems="center">
-                <img src={logo} alt="Logo" style={{ height: '50px', marginRight: '10px' }} />
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Typography variant="h7" color="white">PT SAT NUSAPERSADA Tbk</Typography>
-                  <Typography variant="body2" sx={{ fontSize: '0.85rem', color: 'white', fontWeight: 'bold' }}>
-                    High Technology Electronics Manufacturers
-                  </Typography>
-                </Box>
-              </Box>
-
-            </Toolbar>
-          </AppBar>
-        )}
 
         {/* Sidebar hanya muncul jika sudah login */}
         {isLoggedIn && (
@@ -114,17 +94,15 @@ function App() {
           <Routes>
             {/* Route ke halaman login jika belum login */}
             {!isLoggedIn ? (
-              <Route path="/" element={<Loginform setIsLoggedIn={setIsLoggedIn} />} />
+              <Route path="/" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
             ) : (
               <Route path="/" element={<Navigate to="/dashboarduser" />} />
             )}
-            <Route path="/loginform" element={<Loginform setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
             <Route path="/dashboarduser" element={<DashboardUser />} />
             <Route path="/transaction" element={<Transaction />} />
             <Route path="/report" element={<Report />} />
             <Route path="/register" element={<Register />} />
-            
- 
             <Route path="/account" element={<Account />} />
             
           </Routes>
