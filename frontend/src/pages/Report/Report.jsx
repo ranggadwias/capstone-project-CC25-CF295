@@ -1,15 +1,34 @@
-import React from 'react';
-import { Box, Typography, Table, TableHead, TableRow, TableCell, TableBody, Paper, MenuItem, Select } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+  Box, Typography, Table, TableHead, TableRow,
+  TableCell, TableBody, Paper, MenuItem, Select, CircularProgress
+} from '@mui/material';
 import Sidebar from '../../components/Sidebar';
+import { getReport } from '../../services/report/report';
 
-const transactions = [
-  { title: 'Salary', type: 'Income', date: 'Apr 25', amount: 'Rp 1.000.000' },
-  { title: 'Groceries', type: 'Expenses', date: 'Apr 25', amount: 'Rp 200.000' },
-  { title: 'Electricity', type: 'Expenses', date: 'Apr 18', amount: 'Rp 150.000' },
-];
+function Report() {
+  const [period, setPeriod] = useState('monthly');
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-function ReportPage() {
-  const [period, setPeriod] = React.useState('monthly');
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const token = localStorage.getItem('token'); // ambil token
+        const data = await getReport(token, period);
+        setTransactions(data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransactions();
+  }, [period]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -32,32 +51,46 @@ function ReportPage() {
 
         <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>Transaction History</Typography>
 
-        <Paper elevation={3}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell><strong>Title</strong></TableCell>
-                <TableCell><strong>Date</strong></TableCell>
-                <TableCell><strong>Amount</strong></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {transactions.map((trx, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <Typography fontWeight="bold">{trx.title}</Typography>
-                    <Typography variant="body2" color="text.secondary">{trx.type}</Typography>
-                  </TableCell>
-                  <TableCell>{trx.date}</TableCell>
-                  <TableCell>{trx.amount}</TableCell>
+        {loading ? (
+          <Box display="flex" justifyContent="center" mt={4}>
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Typography color="error" mt={4}>{error}</Typography>
+        ) : (
+          <Paper elevation={3}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell><strong>Title</strong></TableCell>
+                  <TableCell><strong>Date</strong></TableCell>
+                  <TableCell><strong>Amount</strong></TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Paper>
+              </TableHead>
+              <TableBody>
+                {transactions.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={3} align="center">No transactions found</TableCell>
+                  </TableRow>
+                ) : (
+                  transactions.map((trx) => (
+                    <TableRow key={trx.transactionId}>
+                      <TableCell>
+                        <Typography fontWeight="bold">{trx.description}</Typography>
+                        <Typography variant="body2" color="text.secondary">{trx.type}</Typography>
+                      </TableCell>
+                      <TableCell>{trx.date}</TableCell>
+                      <TableCell>{`Rp ${trx.amount.toLocaleString('id-ID')}`}</TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </Paper>
+        )}
       </Box>
     </Box>
   );
 }
 
-export default ReportPage;
+export default Report;

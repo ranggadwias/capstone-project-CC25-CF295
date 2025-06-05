@@ -20,8 +20,34 @@ export const addTransactionModel = async (data) => {
   return docRef.id;
 };
 
-export const getTransactionsModel = async (userId) => {
-  const q = query(transactionsCollection, where("userId", "==", userId));
+export const getTransactionsModel = async (userId, period) => {
+  let startDate = null;
+  const now = new Date();
+
+  if (period === "weekly") {
+    const day = now.getDay();
+    const diffToMonday = (day + 6) % 7;
+    startDate = new Date(now);
+    startDate.setDate(now.getDate() - diffToMonday);
+    startDate.setHours(0, 0, 0, 0);
+  } else if (period === "monthly") {
+    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+  } else if (period === "yearly") {
+    startDate = new Date(now.getFullYear(), 0, 1);
+  }
+
+  let q;
+  if (startDate) {
+    const startTimestamp = Timestamp.fromDate(startDate);
+
+    q = query(
+      transactionsCollection,
+      where("userId", "==", userId),
+      where("date", ">=", startTimestamp)
+    );
+  } else {
+    q = query(transactionsCollection, where("userId", "==", userId));
+  }
 
   const snapshot = await getDocs(q);
   if (snapshot.empty) return [];
