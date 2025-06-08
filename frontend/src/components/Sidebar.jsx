@@ -14,7 +14,10 @@ function Sidebar() {
 
   const handleLogout = () => {
     googleLogout();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user_id');
     localStorage.removeItem('profile');
+    localStorage.removeItem('profile_image');
     navigate('/');
   };
 

@@ -35,10 +35,8 @@ function Login() {
       });
 
       localStorage.setItem("token", backendResponse.data.token);
-      localStorage.setItem(
-        "profile",
-        JSON.stringify(backendResponse.data.user)
-      );
+      localStorage.setItem("user_id", backendResponse.data.user.id);
+      localStorage.setItem("profile", JSON.stringify(backendResponse.data.user));
 
       navigate("/dashboarduser", {
         state: { profile: backendResponse.data.user },
@@ -56,6 +54,9 @@ function Login() {
     const result = await loginUser({ email, password });
 
     if (result.success) {
+      localStorage.setItem("token", result.token);
+      localStorage.setItem("user_id", result.user.id);
+      localStorage.setItem("profile", JSON.stringify(result.user));
       setOpenSuccessModal(true);
     } else if (result.errorCode === "EMAIL_NOT_FOUND") {
       setError("Email not found.");
