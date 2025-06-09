@@ -10,6 +10,7 @@ import {
 import { Storage } from "@mui/icons-material";
 import Sidebar from "../../components/Sidebar";
 import { getDashboardSummary } from "../../services/dashboard/dashboardUser";
+import RecommendationWithCategory from "../../components/RecommendationWithCategory";
 import { useNavigate } from "react-router-dom";
 
 function DashboardUser() {
@@ -122,9 +123,16 @@ function DashboardUser() {
               <Typography variant="caption">
                 of Rp {totalIncome.toLocaleString("id-ID")}
               </Typography>
-              <Typography variant="caption" color="error" display="block">
-                Warning if limits exceeded
-              </Typography>
+
+              {/*}
+              {percentage < 90 && (
+                <Typography variant="caption" color="error" display="block">
+                  Warning if limits exceeded
+                </Typography>
+              )}
+                */}
+
+
             </Card>
           </Grid>
 
@@ -152,9 +160,9 @@ function DashboardUser() {
                         width:
                           totalExpense !== 0
                             ? `${Math.min(
-                                (totalIncome / Math.abs(totalExpense)) * 100,
-                                100
-                              )}%`
+                              (totalIncome / Math.abs(totalExpense)) * 100,
+                              100
+                            )}%`
                             : "0%",
                         height: "100%",
                         backgroundColor: "#5BA2D3",
@@ -187,9 +195,9 @@ function DashboardUser() {
                         width:
                           totalIncome !== 0
                             ? `${Math.min(
-                                (Math.abs(totalExpense) / totalIncome) * 100,
-                                100
-                              )}%`
+                              (Math.abs(totalExpense) / totalIncome) * 100,
+                              100
+                            )}%`
                             : "0%",
                         height: "100%",
                         backgroundColor: "red",
@@ -202,6 +210,12 @@ function DashboardUser() {
             </Grid>
           </Grid>
         </Grid>
+
+        <RecommendationWithCategory
+          income={totalIncome}
+          expenditures={totalExpense}
+          showWarning={percentage >= 90}
+        />
       </Box>
     </Box>
   );
