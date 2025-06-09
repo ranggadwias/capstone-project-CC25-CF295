@@ -1,8 +1,3 @@
-Berikut adalah versi README.md yang sudah dirapikan dan disusun sesuai standar proyek open-source:
-
-📁 README.md – capstone-project-CC25-CF295
-
-```markdown
 # FinMate 💰
 
 FinMate adalah aplikasi pengelolaan keuangan pribadi berbasis web yang ditujukan untuk membantu generasi muda Indonesia mengatur keuangan mereka secara efektif dan terstruktur. Tidak hanya sebagai pencatat transaksi, FinMate hadir sebagai asisten finansial yang edukatif, interaktif, dan mudah digunakan. Fitur-fitur unggulan mencakup pencatatan transaksi otomatis & manual, budgeting cerdas berbasis AI, pelacakan tujuan tabungan, serta visualisasi laporan keuangan.
@@ -23,12 +18,10 @@ Teknologi AI digunakan untuk mengotomatiskan pengkategorian transaksi dan member
 ## 🧱 Struktur Proyek
 
 ```
-
 capstone-project-CC25-CF295/
 ├── backend/        # Node.js + Express + Firebase (API Server)
 ├── frontend/       # HTML + CSS + JS (Web Client / PWA)
-
-````
+```
 
 ---
 
@@ -77,7 +70,7 @@ Base URL (Development): `http://localhost:4000`
 - Responsive Design
 - PWA (Web Manifest + Service Worker)
 
-### 🧩 Fitur Utama
+### 🧹 Fitur Utama
 
 - Autentikasi Pengguna (Login/Register)
 - Dashboard Keuangan Interaktif
@@ -96,7 +89,7 @@ Base URL (Development): `http://localhost:4000`
 ```bash
 git clone https://github.com/ShotZ9/capstone-project-CC25-CF295.git
 cd capstone-project-CC25-CF295
-````
+```
 
 ### 2. Setup Backend
 
@@ -142,15 +135,15 @@ Aplikasi berjalan di: `http://localhost:3000`
 
 Frontend dapat di-deploy menggunakan:
 
-* GitHub Pages
-* Netlify
-* Vercel
+- GitHub Pages
+- Netlify
+- Vercel
 
 Backend dapat menggunakan:
 
-* Vercel (Serverless API)
-* Heroku
-* Google Cloud Run
+- Vercel (Serverless API)
+- Heroku
+- Google Cloud Run
 
 ---
 
@@ -158,20 +151,15 @@ Backend dapat menggunakan:
 
 Tim CC25-CF295:
 
-* Yoel Amadeo Pratomo – Machine Learning
-* Rosalia Indah Dwi Putriningsih – Machine Learning
-* Ahmad Fuad Fauzi – Machine Learning
-* Cici Yulita – Front-End & Back-End
-* Rangga Dwi Aditya Saputra – Front-End & Back-End
-* Melinda Eviyanti – Front-End & Back-End
+- Yoel Amadeo Pratomo – Machine Learning
+- Rosalia Indah Dwi Putriningsih – Machine Learning
+- Ahmad Fuad Fauzi – Machine Learning
+- Cici Yulita – Front-End & Back-End
+- Rangga Dwi Aditya Saputra – Front-End & Back-End
+- Melinda Eviyanti – Front-End & Back-End
 
 ---
 
 ## 📄 Lisensi
 
 Proyek ini dikembangkan sebagai bagian dari Capstone Project Dicoding x Kampus Merdeka 2025. Hak cipta dilindungi oleh masing-masing kontributor.
-
-```
-
-Silakan sesuaikan bagian konfigurasi `.env` atau tautan publik jika sudah tersedia. Jika kamu ingin saya langsung push file ini sebagai draft ke GitHub (jika repo publik), kirimkan token GitHub atau beri izin penulisan sementara.
-```
