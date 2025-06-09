@@ -37,13 +37,6 @@ function App() {
           </IconButton>
         )}
 
-        {/* Sidebar responsive */}
-        <Sidebar
-          open={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-          variant="temporary"
-        />
-
         {/* Konten Utama */}
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Toolbar />
