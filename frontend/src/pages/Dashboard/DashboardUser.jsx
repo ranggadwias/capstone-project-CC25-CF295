@@ -9,13 +9,19 @@ import {
 } from "@mui/material";
 import { Storage } from "@mui/icons-material";
 import Sidebar from "../../components/Sidebar";
+import { IconButton } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { getDashboardSummary } from "../../services/dashboard/dashboardUser";
 import RecommendationWithCategory from "../../components/RecommendationWithCategory";
 import { useNavigate } from "react-router-dom";
 
+
 function DashboardUser() {
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = useMediaQuery('(max-width:900px)');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,10 +57,15 @@ function DashboardUser() {
 
   return (
     <Box sx={{ display: "flex", height: "100vh", overflow: "hidden" }}>
-      <Sidebar />
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <Box sx={{ flexGrow: 1, ml: "30px", p: 3, overflowY: "auto", minHeight: "100vh" }}>
-        <Typography variant="h3" gutterBottom sx={{ fontWeight: "bold" }}>
+      <Box sx={{ flexGrow: 1, p: 3, overflowY: "auto", minHeight: "100vh" }}>
+        {isMobile && (
+          <IconButton onClick={() => setSidebarOpen(true)} sx={{ position: 'fixed', top: 16, left: 16, zIndex: 1400 }}>
+            <MenuIcon />
+          </IconButton>
+        )}
+        <Typography variant="h3" gutterBottom sx={{ fontWeight: "bold", ml: isMobile ? 6 : 0 }}>
           Dashboard
         </Typography>
 

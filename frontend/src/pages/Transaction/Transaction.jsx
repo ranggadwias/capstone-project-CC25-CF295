@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Box, TextField, Typography, Button, MenuItem } from '@mui/material';
 import Sidebar from '../../components/Sidebar';
+import { IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { addTransaction } from '../../services/transaction/transaction';
+
 
 function Transaction() {
   const [form, setForm] = useState({
@@ -10,6 +14,8 @@ function Transaction() {
     description: '',
     date: '',
   });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = useMediaQuery('(max-width:900px)');
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -37,9 +43,14 @@ function Transaction() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Sidebar />
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <Box sx={{ flexGrow: 1, p: 4 }}>
+        {isMobile && (
+          <IconButton onClick={() => setSidebarOpen(true)} sx={{ position: 'fixed', top: 16, left: 16, zIndex: 1400 }}>
+            <MenuIcon />
+          </IconButton>
+        )}
         <Typography variant="h3" fontWeight="bold" gutterBottom>
           Add Transaction
         </Typography>

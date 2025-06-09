@@ -9,6 +9,9 @@ import {
   Button,
 } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
+import { IconButton } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import EditProfileModal from "./EditAccountModal";
 import SuccessModal from "./SuccessModal";
 import ErrorModal from "./ErrorModal";
@@ -26,6 +29,7 @@ const toBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
+
 function Account() {
   const userId = localStorage.getItem("user_id");
   const [profileImage, setProfileImage] = useState(null);
@@ -39,6 +43,8 @@ function Account() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [openErrorModal, setOpenErrorModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = useMediaQuery('(max-width:900px)');
 
   // Image change handler
   const handleImageChange = async (e) => {
@@ -107,8 +113,13 @@ function Account() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
-      <Box sx={{ flexGrow: 1, ml: "30px", mt: 4 }}>
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Box sx={{ flexGrow: 1, ml: isMobile ? 0 : "30px", mt: 4 }}>
+        {isMobile && (
+          <IconButton onClick={() => setSidebarOpen(true)} sx={{ position: 'fixed', top: 16, left: 16, zIndex: 1400 }}>
+            <MenuIcon />
+          </IconButton>
+        )}
         <Typography variant="h3" fontWeight="bold">
           Account
         </Typography>

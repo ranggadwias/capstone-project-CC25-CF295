@@ -4,13 +4,19 @@ import {
   TableCell, TableBody, Paper, MenuItem, Select, CircularProgress
 } from '@mui/material';
 import Sidebar from '../../components/Sidebar';
+import { IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { getReport } from '../../services/report/report';
+
 
 function Report() {
   const [period, setPeriod] = useState('monthly');
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = useMediaQuery('(max-width:900px)');
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -32,8 +38,13 @@ function Report() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Sidebar />
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <Box component="main" sx={{ flexGrow: 1, p: 4 }}>
+        {isMobile && (
+          <IconButton onClick={() => setSidebarOpen(true)} sx={{ position: 'fixed', top: 16, left: 16, zIndex: 1400 }}>
+            <MenuIcon />
+          </IconButton>
+        )}
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="h3" fontWeight="bold">Report Transaction</Typography>
           <Select
