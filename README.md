@@ -31,32 +31,54 @@ capstone-project-CC25-CF295/
 
 - Node.js & Express.js
 - Firebase Firestore (NoSQL, Realtime)
-- Firebase Authentication
 - JSON Web Token (JWT) untuk otorisasi API
 
 ### 📚 Dokumentasi API
 
-Base URL (Development): `http://localhost:4000`
+Base URL (Development): `http://localhost:4000` <br>
+Base URL (Production): `https://finmate-backend-production.up.railway.app`
 
 #### 📝 Register
 - `POST /api/auth/register`
 - Body: `{ name, email, password }`
+- Response: `{ message, userId }`
 
 #### 🔑 Login
 - `POST /api/auth/login`
 - Body: `{ email, password }`
-- Response: `{ token, user }`
+- Response: `{ message, token, user { id, name } }`
+
+#### 🔐 Login Google
+- `POST /api/auth/google`
+- Body: `{ email }`
+- Response: `{ message, token, user { id, name, email } }`
+
+#### 👤 Get User Profile
+- `GET /api/users/:id`
+- Header: `Authorization: Bearer <token>`
+- Response: `{ id, name, email, phone, address, isGoogleUser }`
+
+#### ✏️ Update User Profile
+- `PUT /api/users/:id`
+- Header: `Authorization: Bearer <token>`
+- Body: `{ name, email, phone, address }`
+- Response: `{ message }`
 
 #### 📊 Dashboard Summary
 - `GET /api/transactions/summary`
 - Header: `Authorization: Bearer <token>`
+- Response: `{ message, data { availableBalance, totalIncome, totalExpense } }`
 
 #### ➕ Add Transaction
 - `POST /api/transactions`
+- Header: `Authorization: Bearer <token>`
 - Body: `{ amount, type, description, date }`
+- Response: `{ message, transactionId }`
 
 #### 📁 Get All Transactions
 - `GET /api/transactions`
+- Header: `Authorization: Bearer <token>`
+- Response: `{ message, transactions { transactionId, userId, type, description, amount, date } }`
 
 ---
 
