@@ -6,29 +6,27 @@ import {
   Card,
   CardContent,
   Button,
+  IconButton,
 } from "@mui/material";
 import { Storage } from "@mui/icons-material";
-import Sidebar from "../../components/Sidebar";
-import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { getDashboardSummary } from "../../services/dashboard/dashboardUser";
+import Sidebar from "../../components/Sidebar";
 import RecommendationWithCategory from "../../components/RecommendationWithCategory";
 import { useNavigate } from "react-router-dom";
-
 
 function DashboardUser() {
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const isMobile = useMediaQuery('(max-width:900px)');
+  const isMobile = useMediaQuery("(max-width:900px)");
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSummary = async () => {
       try {
         const data = await getDashboardSummary();
-        console.log("Fetched dashboard summary data:", data);
         setSummary(data);
       } catch (error) {
         console.error("Error fetching summary", error);
@@ -56,16 +54,29 @@ function DashboardUser() {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+    <Box sx={{ display: "flex" }}>
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <Box sx={{ flexGrow: 1, p: 3, overflowY: "auto", minHeight: "100vh" }}>
+      <Box sx={{ flexGrow: 1, p: 3 }}>
         {isMobile && (
-          <IconButton onClick={() => setSidebarOpen(true)} sx={{ position: 'fixed', top: 16, left: 16, zIndex: 1400 }}>
+          <IconButton
+            onClick={() => setSidebarOpen(true)}
+            sx={{
+              position: "fixed",
+              top: 16,
+              left: 16,
+              zIndex: 1400,
+            }}
+          >
             <MenuIcon />
           </IconButton>
         )}
-        <Typography variant="h3" gutterBottom sx={{ fontWeight: "bold", ml: isMobile ? 6 : 0 }}>
+
+        <Typography
+          variant="h3"
+          gutterBottom
+          sx={{ fontWeight: "bold", ml: isMobile ? 6 : 0 }}
+        >
           Dashboard
         </Typography>
 
@@ -111,7 +122,7 @@ function DashboardUser() {
         </Card>
 
         <Grid container spacing={2}>
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4}>
             <Card sx={{ textAlign: "center", p: 2, height: "100%" }}>
               <Typography variant="subtitle1" gutterBottom>
                 This Month
@@ -134,22 +145,11 @@ function DashboardUser() {
               <Typography variant="caption">
                 of Rp {totalIncome.toLocaleString("id-ID")}
               </Typography>
-
-              {/*}
-              {percentage < 90 && (
-                <Typography variant="caption" color="error" display="block">
-                  Warning if limits exceeded
-                </Typography>
-              )}
-                */}
-
-
             </Card>
           </Grid>
 
-          <Grid item xs={8}>
+          <Grid item xs={12} md={8}>
             <Grid container spacing={2} direction="column">
-              {/* Total Income */}
               <Grid item>
                 <Card sx={{ backgroundColor: "#E0F0FC", p: 2 }}>
                   <Typography variant="subtitle2" gutterBottom>
@@ -171,9 +171,9 @@ function DashboardUser() {
                         width:
                           totalExpense !== 0
                             ? `${Math.min(
-                              (totalIncome / Math.abs(totalExpense)) * 100,
-                              100
-                            )}%`
+                                (totalIncome / Math.abs(totalExpense)) * 100,
+                                100
+                              )}%`
                             : "0%",
                         height: "100%",
                         backgroundColor: "#5BA2D3",
@@ -184,7 +184,6 @@ function DashboardUser() {
                 </Card>
               </Grid>
 
-              {/* Total Expenditure */}
               <Grid item>
                 <Card sx={{ border: "1px solid red", p: 2 }}>
                   <Typography variant="subtitle2" gutterBottom>
@@ -206,9 +205,9 @@ function DashboardUser() {
                         width:
                           totalIncome !== 0
                             ? `${Math.min(
-                              (Math.abs(totalExpense) / totalIncome) * 100,
-                              100
-                            )}%`
+                                (Math.abs(totalExpense) / totalIncome) * 100,
+                                100
+                              )}%`
                             : "0%",
                         height: "100%",
                         backgroundColor: "red",
