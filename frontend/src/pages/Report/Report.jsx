@@ -9,7 +9,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { getReport } from '../../services/report/report';
 
-
 function Report() {
   const [period, setPeriod] = useState('monthly');
   const [transactions, setTransactions] = useState([]);
@@ -23,7 +22,7 @@ function Report() {
       setLoading(true);
       setError(null);
       try {
-        const token = localStorage.getItem('token'); // ambil token
+        const token = localStorage.getItem('token');
         const data = await getReport(token, period);
         setTransactions(data);
       } catch (err) {
@@ -41,18 +40,23 @@ function Report() {
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <Box component="main" sx={{ flexGrow: 1, p: 4 }}>
         {isMobile && (
-          <IconButton onClick={() => setSidebarOpen(true)} sx={{ position: 'fixed', top: 16, left: 16, zIndex: 1400 }}>
+          <IconButton 
+            onClick={() => setSidebarOpen(true)} 
+            sx={{ position: 'fixed', top: 16, left: 16, zIndex: 1400 }}
+            aria-label="open sidebar"
+          >
             <MenuIcon />
           </IconButton>
         )}
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
           <Typography variant="h3" fontWeight="bold">Report Transaction</Typography>
           <Select
             value={period}
             onChange={(e) => setPeriod(e.target.value)}
             variant="outlined"
             size="small"
-            sx={{ borderRadius: 3 }}
+            sx={{ borderRadius: 3, minWidth: 120 }}
           >
             <MenuItem value="monthly">Monthly</MenuItem>
             <MenuItem value="weekly">Weekly</MenuItem>
@@ -60,7 +64,7 @@ function Report() {
           </Select>
         </Box>
 
-        <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>Transaction History</Typography>
+        <Typography variant="h4" sx={{ mb: 2 }}>Transaction History</Typography>
 
         {loading ? (
           <Box display="flex" justifyContent="center" mt={4}>
@@ -73,15 +77,16 @@ function Report() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell><strong>Title</strong></TableCell>
-                  <TableCell><strong>Date</strong></TableCell>
-                  <TableCell><strong>Amount</strong></TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', width: '35%' }}>Title</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', width: '20%' }}>Date</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', width: '20%', textAlign: 'right' }}>Amount</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', width: '25%' }}>Category</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {transactions.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={3} align="center">No transactions found</TableCell>
+                    <TableCell colSpan={4} align="center">No transactions found</TableCell>
                   </TableRow>
                 ) : (
                   transactions.map((trx) => (
@@ -91,7 +96,10 @@ function Report() {
                         <Typography variant="body2" color="text.secondary">{trx.type}</Typography>
                       </TableCell>
                       <TableCell>{trx.date}</TableCell>
-                      <TableCell>{`Rp ${trx.amount.toLocaleString('id-ID')}`}</TableCell>
+                      <TableCell sx={{ textAlign: 'right' }}>
+                        {`Rp ${trx.amount.toLocaleString('id-ID')}`}
+                      </TableCell>
+                      <TableCell>{trx.category || '-'}</TableCell>
                     </TableRow>
                   ))
                 )}
