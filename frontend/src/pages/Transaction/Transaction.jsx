@@ -1,56 +1,91 @@
-import React, { useState } from 'react';
-import { Box, TextField, Typography, Button, MenuItem } from '@mui/material';
-import Sidebar from '../../components/Sidebar';
-import { IconButton } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { addTransaction } from '../../services/transaction/transaction';
-
+import React, { useState } from "react";
+import {
+  Box,
+  TextField,
+  Typography,
+  Button,
+  MenuItem,
+  IconButton,
+  Alert,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import Sidebar from "../../components/Sidebar";
+import { addTransaction } from "../../services/transaction/transaction";
 
 function Transaction() {
   const [form, setForm] = useState({
-    type: '',
-    amount: '',
-    description: '',
-    date: '',
+    type: "",
+    amount: "",
+    description: "",
+    date: "",
   });
+
+  const [classifiedCategory, setClassifiedCategory] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const isMobile = useMediaQuery('(max-width:900px)');
+  const isMobile = useMediaQuery("(max-width:900px)");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleClassifyCategory = async (desc) => {
+    if (!desc) return;
+    try {
+      const resKategori = await fetch("http://localhost:5000/api/classify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ description: desc }),
+      });
+
+      const kategoriData = await resKategori.json();
+
+      if (!resKategori.ok)
+        throw new Error(kategoriData.error || "Gagal klasifikasi");
+
+      setClassifiedCategory(kategoriData.category);
+    } catch (error) {
+      console.error("Gagal klasifikasi:", error.message);
+      setClassifiedCategory("ERROR");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
-      amount: parseFloat(form.amount),
-      type: form.type,
-      description: form.description,
-      date: form.date,
-    };
-
     try {
+      const data = {
+        amount: parseFloat(form.amount),
+        type: form.type,
+        description: form.description,
+        date: form.date,
+        category: classifiedCategory,
+      };
+
       const response = await addTransaction(data);
-      console.log('Sukses:', response.message);
-      // Reset form
-      setForm({ type: '', amount: '', description: '', date: '' });
+      console.log("Sukses:", response.message);
+
+      setForm({ type: "", amount: "", description: "", date: "" });
+      setClassifiedCategory("");
     } catch (error) {
-      console.error('Gagal:', error.message);
+      console.error("Gagal simpan transaksi:", error.message);
     }
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <Box sx={{ flexGrow: 1, p: 4 }}>
         {isMobile && (
-          <IconButton onClick={() => setSidebarOpen(true)} sx={{ position: 'fixed', top: 16, left: 16, zIndex: 1400 }}>
+          <IconButton
+            onClick={() => setSidebarOpen(true)}
+            sx={{ position: "fixed", top: 16, left: 16, zIndex: 1400 }}
+          >
             <MenuIcon />
           </IconButton>
         )}
+
         <Typography variant="h3" fontWeight="bold" gutterBottom>
           Add Transaction
         </Typography>
@@ -59,11 +94,11 @@ function Transaction() {
           component="form"
           onSubmit={handleSubmit}
           sx={{
-            backgroundColor: '#fff',
+            backgroundColor: "#fff",
             p: 4,
             borderRadius: 2,
             boxShadow: 1,
-            maxWidth: '100%',
+            maxWidth: "100%",
           }}
         >
           <TextField
@@ -95,6 +130,7 @@ function Transaction() {
             name="description"
             value={form.description}
             onChange={handleChange}
+            onBlur={() => handleClassifyCategory(form.description)}
             margin="normal"
           />
 
@@ -109,15 +145,22 @@ function Transaction() {
             sx={{ width: 200 }}
           />
 
-          <Box sx={{ textAlign: 'right', mt: 2 }}>
+          {classifiedCategory && (
+            <Alert severity="info" sx={{ mt: 3 }}>
+              Kategori hasil klasifikasi: <strong>{classifiedCategory}</strong>
+            </Alert>
+          )}
+
+          <Box sx={{ textAlign: "right", mt: 2 }}>
             <Button
               type="submit"
               variant="contained"
-              sx={{ backgroundColor: '#BBD9EE', color: '#000' }}
+              sx={{ backgroundColor: "#BBD9EE", color: "#000" }}
             >
               Save
             </Button>
           </Box>
+
         </Box>
       </Box>
     </Box>
