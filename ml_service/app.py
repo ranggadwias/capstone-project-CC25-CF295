@@ -6,9 +6,12 @@ import re
 import string
 from nltk.corpus import stopwords
 from flask_cors import CORS
+import os
+import nltk
 
 MAXLEN = 10
 
+nltk.download('stopwords')
 stop_words = set(stopwords.words('indonesian'))
 
 with open("tokenizer.pkl", "rb") as f:
@@ -52,4 +55,5 @@ def predict_category():
     return jsonify({"category": label})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
