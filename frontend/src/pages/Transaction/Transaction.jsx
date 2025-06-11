@@ -32,7 +32,7 @@ function Transaction() {
   const handleClassifyCategory = async (desc) => {
     if (!desc) return;
     try {
-      const resKategori = await fetch("http://localhost:5000/api/classify", {
+      const resKategori = await fetch("https://capstone-project-cc25-cf295-ml.up.railway.app/api/classify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ description: desc }),
