@@ -60,6 +60,7 @@ export const getTransactionsModel = async (userId, period) => {
       type: data.type,
       description: data.description,
       amount: data.amount,
+      category: data.category || null,
       date: data.date?.toDate
         ? data.date.toDate().toISOString().split("T")[0]
         : data.date,

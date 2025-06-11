@@ -11,6 +11,7 @@ export const addTransaction = async (req, res) => {
       type,
       description,
       date: new Date(date),
+      category,
     };
 
     const id = await addTransactionModel(transactionData);
