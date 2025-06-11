@@ -8,7 +8,7 @@ import App from './App';
 const theme = createTheme();
 
 ReactDOM.render(
-  <GoogleOAuthProvider clientId="91726949006-le79ppulhe7h4h2m8sboio5ng2nn4cps.apps.googleusercontent.com"> 
+  <GoogleOAuthProvider clientId="563199896555-sk8bufkuvhnoker77ukjg9d1vva5is6b.apps.googleusercontent.com"> 
 
     <ThemeProvider theme={theme}>
       <CssBaseline />
