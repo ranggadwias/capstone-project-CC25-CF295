@@ -13,3 +13,12 @@ export const getReport = async (token, period) => {
     throw error.response?.data?.message || error.message;
   }
 };
+
+export const getSummary = async (token) => {
+  const res = await api.get('/api/transactions/summary', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data.data;
+};
