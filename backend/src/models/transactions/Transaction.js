@@ -69,3 +69,26 @@ export const getTransactionsModel = async (userId, period) => {
 
   return snapshot.docs.map(formatTransaction);
 };
+
+export const getAllTransactionsByUser = async (userId) => {
+  const q = query(transactionsCollection, where("userId", "==", userId));
+  const snapshot = await getDocs(q);
+  if (snapshot.empty) return [];
+
+  const formatTransaction = (doc) => {
+    const data = doc.data();
+    return {
+      transactionId: doc.id,
+      userId: data.userId,
+      type: data.type,
+      description: data.description,
+      amount: data.amount,
+      category: data.category || null,
+      date: data.date?.toDate
+        ? data.date.toDate().toISOString().split("T")[0]
+        : data.date,
+    };
+  };
+
+  return snapshot.docs.map(formatTransaction);
+};
